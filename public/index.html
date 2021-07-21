@@ -24,6 +24,11 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
+    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+    <script>
+      Kakao.init('0c9ac6f0dc23c8757aba947bb5adf739')
+      console.log(Kakao.isInitialized())
+    </script>
     <title>React App</title>
   </head>
   <body>

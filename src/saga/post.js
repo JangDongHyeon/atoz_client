@@ -37,9 +37,9 @@ import axios from 'axios'
 function postGetAPI(data) {
 
     if (data.check)
-        return axios.get(`/post/list?lastId=${data.lastId}`);
+        return axios.get(`/post/list?lastId=${data.lastId}&search=${data.search}`);
     else
-        return axios.get(`/post/list?lastId=${0}`);
+        return axios.get(`/post/list?lastId=${0}&search=${data.search}`);
 }
 
 

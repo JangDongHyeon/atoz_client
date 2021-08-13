@@ -3,9 +3,19 @@ import {
     INVOICE_GET_REQUEST,
     INVOICE_GET_SUCCESS,
     INVOICE_GET_FAILURE,
+
+    INVOICE_LIKE_GET_REQUEST,
+    INVOICE_LIKE_GET_SUCCESS,
+    INVOICE_LIKE_GET_FAILURE,
+
     INVOICE_ADMIN_GET_REQUEST,
     INVOICE_ADMIN_GET_SUCCESS,
     INVOICE_ADMIN_GET_FAILURE,
+    INVOICE_CHART_ADMIN_GET_REQUEST,
+    INVOICE_CHART_ADMIN_GET_SUCCESS,
+    INVOICE_CHART_ADMIN_GET_FAILURE,
+
+
     INVOICE_ADD_REQUEST,
     INVOICE_ADD_FAILURE,
     INVOICE_ADD_SUCCESS,
@@ -21,7 +31,12 @@ import {
     INVOICE_UPDATE_REQUEST,
     INVOICE_UPDATE_FAILURE,
     INVOICE_UPDATE_SUCCESS,
-
+    JJIM_LIKE_REQUEST,
+    JJIM_LIKE_FAILURE,
+    JJIM_LIKE_SUCCESS,
+    JJIM_UNLIKE_REQUEST,
+    JJIM_UNLIKE_FAILURE,
+    JJIM_UNLIKE_SUCCESS,
 
 
     INVOICE_RELATED_REQUEST,
@@ -38,10 +53,13 @@ import { produce } from 'immer';
 
 const initialState = {
     invoices: [],
+    likeInvoices: [],
     notInvoices: [],
     searchInvoices: [],
     relatedInvoices: [],
     imagePaths: [],
+    chartC: [],
+    chartT: [],
     hasMoreInvoices: true,
     psize: null,
     invoice: null,
@@ -50,9 +68,17 @@ const initialState = {
     loadAdminInvoicesLoading: false,
     loadAdminInvoicesError: null,
 
+    loadAdminInvoicesChatsDone: false,
+    loadAdminInvoicesChatsLoading: false,
+    loadAdminInvoicesChatsError: null,
+
     loadInvoicesDone: false,
     loadInvoicesLoading: false,
     loadInvoicesError: null,
+
+    loadInvoicesLikeDone: false,
+    loadInvoicesLikeLoading: false,
+    loadInvoicesLikeError: null,
 
     imageRemoveInvoicesDone: false,
     imageRemoveInvoicesLoading: false,
@@ -86,6 +112,12 @@ const initialState = {
     uploadInvoiceImagesLoading: false,
     uploadInvoiceImagesDone: false,
     uploadInvoiceImagesError: null,
+    jjimLikeDone: false,
+    jjimLikeLoading: false,
+    jjimLikeError: null,
+    jjimUnLikeDone: false,
+    jjimUnLikeLoading: false,
+    jjimUnLikeError: null,
 };
 
 
@@ -117,6 +149,30 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
             draft.loadInvoicesError = action.error;
             break;
 
+        case INVOICE_LIKE_GET_REQUEST:
+            draft.loadInvoicesLikeLoading = true;
+            draft.loadInvoicesLikeDone = false;
+            draft.loadInvoicesLikeError = null;
+            break;
+        case INVOICE_LIKE_GET_SUCCESS:
+
+            draft.loadInvoicesLikeLoading = false;
+            draft.loadInvoicesLikeDone = true;
+            draft.psize = action.data.data.size;
+            draft.hasMoreInvoices = action.data.data.length === 10;
+
+            if (action.data.check)
+                draft.likeInvoices = action.data.data
+            else
+                draft.likeInvoices = draft.likeInvoices.concat(action.data.data);
+            break;
+
+        case INVOICE_LIKE_GET_FAILURE:
+
+            draft.loadInvoicesLikeLoading = false;
+            draft.loadInvoicesLikeError = action.error;
+            break;
+
         case INVOICE_ADMIN_GET_REQUEST:
             draft.loadAdminInvoicesLoading = true;
             draft.loadAdminInvoicesDone = false;
@@ -140,6 +196,32 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
             draft.loadAdminInvoicesLoading = false;
             draft.loadAdminInvoicesError = action.error;
             break;
+
+
+        case INVOICE_CHART_ADMIN_GET_REQUEST:
+            draft.loadAdminInvoicesChatsLoading = true;
+            draft.loadAdminInvoicesChatsDone = false;
+            draft.loadAdminInvoicesChatsError = null;
+            break;
+        case INVOICE_CHART_ADMIN_GET_SUCCESS:
+
+            draft.loadAdminInvoicesChatsLoading = false;
+            draft.loadAdminInvoicesChatsDone = true;
+
+
+            draft.chartC = action.data.data.arrC;
+            draft.chartT = action.data.data.arrT;
+
+            draft.invoices = action.data;
+            break;
+
+        case INVOICE_CHART_ADMIN_GET_FAILURE:
+
+            draft.loadAdminInvoicesChatsLoading = false;
+            draft.loadAdminInvoicesChatsError = action.error;
+            break;
+
+
 
         case INVOICE_RESET:
             draft.searchInvoicesLoading = false;
@@ -269,6 +351,42 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
             draft.deleteInvoicesLoading = false;
             draft.deleteInvoicesError = action.error;
             break;
+        case JJIM_LIKE_REQUEST:
+            draft.jjimLikeLoading = true;
+            draft.jjimLikeDone = false;
+            draft.jjimLikeError = null;
+            break;
+        case JJIM_LIKE_SUCCESS:
+
+            draft.jjimLikeLoading = false;
+            draft.jjimLikeDone = true;
+            // if(check==='jjimList')
+            //     draft.likeInvoices=draft.likeInvoices.concat({})
+            // else
+            draft.invoice.Likers = draft.invoice.Likers.concat({ id: action.data.userId });
+            break;
+        case JJIM_LIKE_FAILURE:
+            draft.jjimLikeLoading = false;
+            draft.jjimLikeError = action.error;
+
+            break;
+        case JJIM_UNLIKE_REQUEST:
+            draft.jjimUnLikeLoading = true;
+            draft.jjimUnLikeDone = false;
+            draft.jjimUnLikeError = null;
+            break;
+        case JJIM_UNLIKE_SUCCESS:
+
+            draft.jjimUnLikeLoading = false;
+            draft.jjimUnLikeDone = true;
+            if (action.data.check === 'jjimList')
+                draft.likeInvoices = draft.likeInvoices.filter(item => item.id !== action.data.invoiceId)
+            else
+                draft.invoice.Likers = draft.invoice.Likers.filter(item => item.id !== action.data.userId);
+            break;
+        case JJIM_UNLIKE_FAILURE:
+            draft.jjimUnLikeLoading = false;
+            draft.jjimUnLikeError = action.error;
 
         default:
             break;

@@ -4,7 +4,6 @@ $gray2:#c4c4c4;
 $gray3:#999;
 $gray4:#666;
 $gray5:#333;
-$gray5:#333;
 $yellow1: #FED332;
 $blue1: #1C4FA1;
 .appLayout{
@@ -80,9 +79,6 @@ $blue1: #1C4FA1;
                 height: calc(50vh - 60px);
                 .homeBottomText{
                         margin-top: 10px;
-                        display: flex;
-                        flex-direction: column;
-                        align-items: center;
                 }
         }
 }
@@ -123,7 +119,7 @@ $blue1: #1C4FA1;
                 padding: 30px;
         }
 }
-/*board and admin*/
+/*post*/
 .boardContainer{
         max-width: 1000px;
         width: 100%;
@@ -154,24 +150,6 @@ $blue1: #1C4FA1;
                                 margin-bottom: 20px;
                         }
                 }
-                .adminContainer{
-                        display: flex;
-                        flex-direction: column;
-                        justify-content: space-around;
-                        align-items: flex-start;
-                        width: 180px;
-                        height: 250px;
-                        box-shadow: 0px 0px 20px rgba(82, 82, 82, 0.3);
-                        border-radius: 20px;
-                        position: fixed;
-                        padding: 10px;
-                        background-color: #fff;
-                        margin-top: 90px;
-                        border:1px solid $gray2;
-                        .ant-menu-item, .ant-menu-item-selected{
-                                margin-bottom: 20px;
-                        }
-                }
                 .collapseContainer{
                        margin-left: 200px; 
                        width: 100%;
@@ -188,101 +166,16 @@ $blue1: #1C4FA1;
                        padding:0 10px;
                         
                 }
-                .chartContainer{
-                        display: flex;
-                        flex-direction: column;
-                        align-items: center;
-                        background-color: #fff;
-                        border: 1px solid #ccc;
-                        border-radius: 20px;
-                        // height: 1000px;
-                        width: 100%;
-                        padding: 20px;
-                }
         }
 }
-.qnaSwitch{
-        display: flex;
-        align-items: center;
-        margin-bottom: 10px;
-        justify-content: space-between;
-}
+
 /*form*/
 .formContainer{
         max-width: 800px;
         width: 100%;
         color: #444;   
 }
-.SupportLayoutContainer{
-        
-}
-.answerContainer{
-        margin-left: 45px;
-        // background-color: $gray1;
-        
-}
-.chartRadio{
-        display: flex;
-        height: 90px;
-        align-items: flex-end;
-        padding-bottom: 10px;
-}
-/*sign up*/
-.signupContainer{
-        // display: flex;
-        // flex-direction: column;
-        // align-items: center;
-        // justify-content: center;
-        max-width: 600px;
-        width: 100%;
-        // height: calc(100vh - 60px);
-        color: #444;
-        .signupTop{
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                padding: 50px;
-                .subTitle{
-                        margin:20px;
-                        text-align: center;
-                }
-        }
-        .snsSignup{
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                // padding: 10px;
-                background-color: #fff;
-                // border:1px solid #ddd;
-                margin-bottom: 10px;
-        }
-        .signupForm{
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                height: 600px;
-                border:1px solid #ddd;
-                background-color: #fff;
-                padding:10px 50px;
-                margin-bottom:50px;
-                .terms{
-                        display: flex;
-                        flex-direction: column;
-                }
-              
-        
-        }
-        .snsCircle{
-                width: 100px;
-        }
-}
-.modProfile{
-        width: 100%;
-        max-width: 700px;
-        background-color: #fff;
-        padding: 20px;
-        border: 1px solid #f1f1f1;
-}
+
 /******************************service component****************************/
 /*tracking*/
 .trackingContainer{
@@ -500,7 +393,6 @@ $blue1: #1C4FA1;
                 color:#fff;
                 border:none;
                 margin-left: 5px;
-                cursor: pointer;
         }
 }
 .modalCheckViewContainer{
@@ -509,12 +401,6 @@ $blue1: #1C4FA1;
         .modalCheckViewMiddle{
                 margin-top: 20px;
                 padding-left: 30px;
-        }
-        .modalCheckViewBottom{
-                display: flex;
-                width: 100%;
-                justify-content: center;
-
         }
 }
 .modalTop{
@@ -529,23 +415,6 @@ $blue1: #1C4FA1;
         background-color: $blue1;
         margin-right: 5px;
         float: left;
-}
-.countryContainer{
-        display: flex;
-        margin-bottom: 50px;
-        color: #444;
-        .countryWrap{
-                display: flex;
-                flex-direction: column;
-                margin-right: 20px;
-                align-items: center;
-                .countryImg{
-                        width: 50px;
-                        border-radius: 50px;
-                        border:1px solid $gray2;
-                }
-        }
-
 }
 /******************************common******************************/
 *:focus {
@@ -564,10 +433,6 @@ a:visited{
 
 .size100{
         font-size: 100px;
-        font-weight: 400;
-}
-.size60{
-        font-size: 60px;
         font-weight: 400;
 }
 .size50{
@@ -778,20 +643,4 @@ a:visited{
 .rdw-editor-main{
         min-height: 100px;
 }
-.verticalCenterCol{
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
 
-}
-.verticalCenterRow{
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        // color: #e75319;
-}
-.horizontalCenter{
-        display: flex;
-        justify-content: center;
-
-}

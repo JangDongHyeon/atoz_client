@@ -4,11 +4,11 @@ import { Form, Input, Checkbox, Button } from 'antd';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import AppLayout from '../components/AppLayout';
+import AppLayout from '../AppLayout';
 import useInput from '../hooks/useInput';
-import { SIGN_UP_REQUEST } from '../actions/types';
+import { SIGN_UP_REQUEST } from '../../actions/types';
 import { withRouter } from "react-router-dom";
-import KakaoSocialLogin from '../components/auth/KakaoSocialLogin'
+import KakaoSocialLogin from '../auth/KakaoSocialLogin'
 
 const ErrorMessage = styled.div`
   color: red;

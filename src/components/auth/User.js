@@ -6,6 +6,7 @@ import { withRouter } from 'react-router-dom';
 
 const User = ({ children, history }) => {
     const { me } = useSelector((state) => state.user);
+  
     useEffect(() => {
         if (!me)
             history.push(`/signin`);

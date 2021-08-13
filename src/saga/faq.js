@@ -37,9 +37,9 @@ import axios from 'axios'
 function faqGetAPI(data) {
 
     if (data.check)
-        return axios.get(`/faq/list?lastId=${data.lastId}`);
+        return axios.get(`/faq/list?lastId=${data.lastId}&search=${data.search}`);
     else
-        return axios.get(`/faq/list?lastId=${0}`);
+        return axios.get(`/faq/list?lastId=${0}&search=${data.search}`);
 }
 
 

@@ -1,14 +1,21 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { Modal, Select, Form, Checkbox, Divider, } from 'antd';
+import { Modal, Select, Form, Checkbox, Divider, Button, Alert,message } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import AppLayout from '../components/AppLayout';
 import { useMediaQuery } from "react-responsive"
 import { GET_CONU_TRAN_REQUEST, INVOICE_SEARCH_REQUEST, USER_UPDATE_REQUEST, INVOICE_RESET } from '../actions/types';
 import logo2 from '../assets/logo2.png'
+import atoz_logo3 from '../assets/atoz_logo3.png'
 import useInput from '../hooks/useInput';
 import { withRouter } from 'react-router-dom';
+import { SearchOutlined,} from '@ant-design/icons';
+import usa from '../assets/usa.png'
+import can from '../assets/can.png'
+import ups from '../assets/ups.png'
+import ems from '../assets/ems.png'
+import { Reveal, Fade } from 'react-reveal';
 
 const { Option } = Select;
 const Home = ({ history }) => {
@@ -21,7 +28,8 @@ const Home = ({ history }) => {
     const isMobile = useMediaQuery({
         query: "(max-width:767px)"
     });
-    const [showModal, setShowModal] = useState(false);
+    const [showCheckModal, setShowCheckModal] = useState(false);
+    const [showServiceModal, setShowServiceModal] = useState(false);
     const [country, setCountry] = useState([]);
     const [weight, setWeight] = useState('1');
     const [transit, setTransit] = useState([]);
@@ -40,7 +48,7 @@ const Home = ({ history }) => {
             }
 
             if (!HAS_VISITED_BEFORE) {
-                setShowModal(true);
+                setShowCheckModal(true);
                 // let expires = new Date();
                 // expires = expires.setHours(expires.getHours() + 24);
                 // localStorage.setItem('hasVisitedBefore', expires);
@@ -68,7 +76,7 @@ const Home = ({ history }) => {
     }, [searchInvoicesDone, searchInvoice])
 
     const handleClose = () => {
-        setShowModal(false)
+        setShowCheckModal(false)
         if (checkbx) {
             let expires = new Date();
             expires = expires.setHours(expires.getHours() + 24);
@@ -96,7 +104,7 @@ const Home = ({ history }) => {
 
 
     const onSubmit = useCallback(() => {
-
+       
         dispatch({
             type: INVOICE_SEARCH_REQUEST,
             data: { search: invoiceNumber },
@@ -112,17 +120,74 @@ const Home = ({ history }) => {
     }
 
     const handleOk = useCallback(() => {
-        setShowModal(false);
+        console.log('checkbx',checkbx)
+        if(!checkbx){
+            console.log('aaaaaaa')
+            if(country.length==0)
+                return message.error('국가를 선택하세요.')
+            if(weight=='1')
+                return message.error('운송사를 선택하세요.')
+            if(transit.length==0)
+                return message.error('무게를 선택하세요.')
+            dispatch({
+                type: USER_UPDATE_REQUEST,
+                data: { country, weight, transit },
+            });
+        }
+        else{
+            setShowCheckModal(false);
+            if (checkbx) {
+                let expires = new Date();
+                expires = expires.setHours(expires.getHours() + 24);
+                localStorage.setItem('hasVisitedBefore', expires);
+            }
 
-        dispatch({
-            type: USER_UPDATE_REQUEST,
-            data: { country, weight, transit },
-        });
-    }, [country, weight, transit]);
+        }
 
+
+       
+
+    }, [country, weight, transit,checkbx]);
+
+    const modalServicePossibleView =()=>(
+        <Modal visible={showServiceModal} onCancel={(e)=>setShowServiceModal(false)} width={450}>
+            <div className='modalTop'>
+                <img src={logo2} style={{ width: 30, height: 30, marginRight: 10 }} />
+                <span className='bold size18'>서비스가능 지역</span>
+            </div>
+            <Divider />
+                <div style={{float:'right', marginTop:-20, color:'#999'}}>21년.12월 기준</div>
+            <div className='countryContainer'>
+                <div className='countryWrap'>
+                    <img className='countryImg'src={usa} />
+                    미국
+                </div>
+                <div className='countryWrap'>
+                    <img className='countryImg'src={can} />
+                    캐나다
+                </div>
+            </div>
+
+            <div className='modalTop'>
+                <img src={logo2} style={{ width: 30, height: 30, marginRight: 10 }} />
+                <span className='bold size18'>서비스가능 운송사</span>
+            </div>
+            <Divider />
+                <div style={{float:'right', marginTop:-20, color:'#999'}}>21년.12월 기준</div>
+                <div className='countryContainer'>
+                <div className='countryWrap'>
+                    <img className='countryImg'src={ups} />
+                    UPS
+                </div>
+                <div className='countryWrap'>
+                    <img className='countryImg'src={ems} />
+                    EMS
+                </div>
+            </div>
+        </Modal>
+    )
     const modalCheckView = () => (
-        <Modal visible={showModal} onOk={handleOk} onCancel={handleClose} width={450}>
-            {/* <Form onFinish={onSubmit}> */}
+        <Modal visible={showCheckModal} onOk={handleOk} onCancel={handleClose} width={450}>
             <div className='modalCheckViewContainer'>
                 <div className='modalCheckViewTop'>
                     <img src={logo2} style={{ width: 30, height: 30, marginRight: 10 }} />
@@ -153,40 +218,41 @@ const Home = ({ history }) => {
                         <div className='blueCircle'></div><span>평소 어느정도 무게를 배송 하시나요?</span>
                     </div>
                     <Select defaultValue={weight} style={{ width: 250, marginTop: 8 }} onChange={(e, i) => handleChangeSelect(e, i, 'weight')}>
-                        <Option value='0'>1~10kg</Option>
-                        <Option value='1'>11~20kg</Option>
-                        <Option value='2'>31~40kg</Option>
-                        <Option value='3'>41~50kg</Option>
+                        <Option value='0'>1~5kg</Option>
+                        <Option value='1'>5~10kg</Option>
+                        <Option value='2'>10~15kg</Option>
+                        <Option value='3'>15~20kg</Option>
                     </Select>
                     <Divider style={{ visibility: 'hidden' }} />
                     <Checkbox onChange={checkOnChange} style={{ float: 'right' }}>24시간동안 안보기</Checkbox>
                 </div>
 
+                <div className="modalCheckViewBottom">
+                            <Button type="primary" onClick={(e)=>handleOk()}>확인</Button>
+                        </div>
             </div>
 
 
-            {/* <div style={{ marginTop: 10 }}>
-                            <Button type="primary" htmlType="submit" loading={profileUpdateLoading}>입력</Button>
-                        </div> */}
-            {/* </Form> */}
 
         </Modal>
     )
     return (
         <AppLayout>
             <div className='homeContainer'>
+
                 <div className='homeTop'>
-                    {(isPc) && <div>
-                        <span className='blue1 size100'>A</span><span className='yellow1 size100'>to</span><span className='blue1 size100'>Z</span>
+
+                    {(isPc) && <div style={{ zIndex:10}}>
+                        <span className='blue1 size100'>A</span><span className='yellow1 size60'>to</span><span className='blue1 size100'>Z</span>
                     </div>}
                     {(isMobile || isTablet) && <div>
                         <span className='blue1 size50'>A</span><span className='yellow1 size50'>to</span><span className='blue1 size50'>Z</span>
                     </div>}
-
+                    {/* <img src={atoz_logo3} style={{width:200}}/> */}
                     <Form onFinish={onSubmit} className='searchInputContainer'>
 
                         <input className='searchInput' value={invoiceNumber} required onChange={onChangeInvoiceNumber} placeholder='운송장번호를 입력하세요'></input>
-                        <button className='searchInputButton' htmlType="submit">z</button>
+                        <button className='searchInputButton'><SearchOutlined /></button>
 
 
 
@@ -195,12 +261,19 @@ const Home = ({ history }) => {
                 </div>
                 <div className='homeBottom'>
                     <div className='homeBottomText'>
-                        <span>아직 배송 전이시라면, <span className='blue1 bold'>AI로 배송기간</span>을 예측하세요.</span>
+                        <p>아직 배송 전이시라면, <span className='blue1 bold'>AI로 배송기간</span>을 예측하세요.</p>
+                        <p>서비스가능한지역, 운송사<button className='nudeButton' onClick={(e)=>setShowServiceModal(true)}> <span className='blue1 bold'>보기</span></button></p>
                     </div>
                 </div>
             </div>
-            {showModal && countrys && transits &&
+            {console.log(countrys.length>0)
+            // console.log(transits.length>0)
+            }
+            {showCheckModal && countrys.length>0 && transits.length>0 &&
                 modalCheckView()
+            }
+            {
+                modalServicePossibleView()
             }
         </AppLayout>
     );

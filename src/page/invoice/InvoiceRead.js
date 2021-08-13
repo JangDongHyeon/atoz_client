@@ -1,20 +1,31 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import {
+    LikeOutlined,
 
-import { message } from 'antd';
+    LikeFilled,
+    HeartOutlined,
+    HeartTwoTone
+} from '@ant-design/icons';
+import { message, Tooltip } from 'antd';
 import AppLayout from '../../components/AppLayout';
 import { useMediaQuery } from "react-responsive"
 import { Fade } from 'react-reveal';
 import Tracking from '../../components/service/Tracking';
 import Alarm from '../../components/service/Alarm';
 import { useDispatch, useSelector } from 'react-redux';
-import { INVOICE_READ_REQUEST } from '../../actions/types';
+import { INVOICE_READ_REQUEST, JJIM_LIKE_REQUEST, JJIM_UNLIKE_REQUEST } from '../../actions/types';
 const InvoiceRead = ({ match }) => {
     const isPc = useMediaQuery({
         query: "(min-width:1024px)"
     });
-    const dispatch = useDispatch();
     const { invoice } = useSelector((state) => state.invoice);
+
+    const userId = useSelector((state) => state.user.me?.id);
+    // const [findFavo, setFindFavo] = useState(false)
+    const findFavo = invoice && invoice.Likers.find(item => item.id === userId);
+    const dispatch = useDispatch();
+
     // const isTablet = useMediaQuery({
     //     query: "(min-width:768px) and (max-width:1023px)"
     // });
@@ -33,6 +44,31 @@ const InvoiceRead = ({ match }) => {
     //     message.info(`Selected Date: ${value ? value.format('YYYY-MM-DD') : 'None'}`);
     //     setDate(value);
     // };
+
+    // useEffect(() => {
+    //     setFindFavo(invoice && invoice.Likers.find(item => item.id === userId));
+    // }, [invoice])
+
+    const favofite = useCallback(() => {
+
+        if (!userId) {
+            return alert('로그인 후 시작해주세요')
+        }
+
+        if (!findFavo)
+            dispatch({
+                type: JJIM_LIKE_REQUEST,
+                data: { invoiceId: invoice.id }
+            });
+        else
+            dispatch({
+                type: JJIM_UNLIKE_REQUEST,
+                data: { invoiceId: invoice.id }
+            });
+
+
+
+    }, [findFavo, userId]);
 
     useEffect(() => {
         dispatch({
@@ -54,6 +90,12 @@ const InvoiceRead = ({ match }) => {
                     <Tracking />
                     {/* </Fade> */}
                 </div>
+                <span key="comment-basic-like">
+                    <Tooltip title="Like">
+                        {findFavo ? <HeartTwoTone twoToneColor="#eb2f96" key="heart" onClick={favofite} />
+                            : <HeartOutlined key="heart" onClick={favofite} />}
+                    </Tooltip>
+                </span>
                 <div className='serviceListWrap2'>
                     <div className='serviceTextContainer'>
                         <span className='size50'>{invoice.number}</span>

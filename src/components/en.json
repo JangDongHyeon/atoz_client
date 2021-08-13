@@ -1,0 +1,41 @@
+{
+  "ai": "AI Delivery Forecast",
+  "menu":"Menu",
+  "support":"Support",
+  "post":"Notice",
+  "faq":"FAQ",
+  
+  "history":"History",
+  "answer":"Q&A manager",
+  "statistics":"Statistics",
+
+
+  "login":"login",
+  "logout":"logout",
+  "siginup":"sigin up",
+  "password":"password",
+  "repeat":"repeat",
+  "nickname":"nickname",
+
+  "edit":"edit",
+  "write":"write",
+  "search":"search",
+  "delete":"delete",
+  "submit":"submit",
+  "newquestion": "new question",
+  "repliedquestion":"replied question",
+
+  "bycountry":"By country",
+  "bycarrier":"By carrier",
+
+  "titleinput":"Title",
+  "messageinput":"Content",
+
+  "loginmessage":"Login is required.",
+  "cancelmessage":"Canceled.",
+  "deletemessage":"Deleted.",
+  "deletesuremessage":"Are you sure you want to delete?",
+  "ok":"Ok.",
+  "no":"No."
+
+}

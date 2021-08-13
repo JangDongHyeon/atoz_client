@@ -1,0 +1,44 @@
+{
+        "ai": "AI배송기간 예측",
+        "menu":"메뉴",
+        "support":"고객지원",
+        "post":"공지사항",
+        "faq":"자주하는질문",
+        
+        "history":"조회내역",
+        "answer":"Q&A관리",
+        "statistics":"통계",
+
+        "myhistory":"나의배송",
+        "contactus":"문의하기",
+        "modprofile":"정보수정",
+
+        "login":"로그인",
+        "logout":"로그아웃",
+        "siginup":"회원가입",
+        "password":"비밀번호",
+        "repeat":"비밀번호 확인",
+        "nickname":"닉네임",
+
+        "edit":"수정",
+        "write":"쓰기",
+        "search":"검색",
+        "delete":"삭제",
+        "submit":"등록",
+        "newquestion": "새로운 질문",
+        "repliedquestion":"완료된 질문",
+
+        "bycountry":"국가별",
+        "bycarrier":"배송사별",
+
+        "titleinput":"제목을 입력하세요",
+        "messageinput":"내용을 입력하세요",
+
+        "loginmessage":"로그인이 필요합니다.",
+        "cancelmessage":"취소 되었습니다.",
+        "deletemessage":"삭제 되었습니다.",
+        "deletesuremessage":"정말 삭제 하시겠습니까?",
+        "ok":"네.",
+        "no":"아니오."
+
+}

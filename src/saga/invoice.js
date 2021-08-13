@@ -22,15 +22,21 @@ import {
     INVOICE_ADMIN_GET_SUCCESS,
     INVOICE_ADMIN_GET_FAILURE,
 
-
+    INVOICE_CHART_ADMIN_GET_REQUEST,
+    INVOICE_CHART_ADMIN_GET_SUCCESS,
+    INVOICE_CHART_ADMIN_GET_FAILURE,
     INVOICE_RELATED_REQUEST,
     INVOICE_RELATED_FAILURE,
     INVOICE_RELATED_SUCCESS,
-
-
-
-
-
+    JJIM_LIKE_REQUEST,
+    JJIM_LIKE_SUCCESS,
+    JJIM_LIKE_FAILURE,
+    JJIM_UNLIKE_REQUEST,
+    JJIM_UNLIKE_SUCCESS,
+    JJIM_UNLIKE_FAILURE,
+    INVOICE_LIKE_GET_REQUEST,
+    INVOICE_LIKE_GET_SUCCESS,
+    INVOICE_LIKE_GET_FAILURE,
 } from '../actions/types';
 import axios from 'axios'
 
@@ -66,6 +72,37 @@ function* invoiceGet(action) {
     }
 }
 
+function invoiceLikeGetAPI(data) {
+
+    if (data.check)
+        return axios.get(`/invoice/hartList?lastId=${data.lastId}`);
+    else
+        return axios.get(`/invoice/hartList?lastId=${0}`);
+}
+
+
+function* invoiceLikeGet(action) {
+    try {
+
+        const result = yield call(invoiceLikeGetAPI, action.data);
+
+        yield put({
+            type: INVOICE_LIKE_GET_SUCCESS,
+            data: { data: result.data, check: action.data.check ? false : true },
+        });
+
+
+
+    }
+    catch (error) {
+        console.error(error);
+        yield put({
+            type: INVOICE_LIKE_GET_FAILURE,
+            error: error.response.data,
+        });
+    }
+}
+
 
 function invoiceAdminGetAPI(data) {
 
@@ -93,6 +130,36 @@ function* invoiceAdminGet(action) {
         console.error(error);
         yield put({
             type: INVOICE_ADMIN_GET_FAILURE,
+            error: error.response.data,
+        });
+    }
+}
+
+
+function invoiceAdminChartGetAPI(data) {
+
+    return axios.get(`/invoice/statistics?date=${data.date}`);
+
+}
+
+
+function* invoiceAdminChartGet(action) {
+    try {
+
+        const result = yield call(invoiceAdminChartGetAPI, action.data);
+
+        yield put({
+            type: INVOICE_CHART_ADMIN_GET_SUCCESS,
+            data: { data: result.data },
+        });
+
+
+
+    }
+    catch (error) {
+        console.error(error);
+        yield put({
+            type: INVOICE_CHART_ADMIN_GET_FAILURE,
             error: error.response.data,
         });
     }
@@ -263,14 +330,76 @@ function* invoiceDelete(action) {
     }
 }
 
+function likeInvoiceAPI(data) {
 
+    return axios.patch(`/invoice/like/${data.invoiceId}`);
+
+}
+
+function* likeInvoice(action) {
+    try {
+
+        const result = yield call(likeInvoiceAPI, action.data);
+
+        yield put({
+            type: JJIM_LIKE_SUCCESS,
+            data: { userId: result.data.userId, invoiceId: action.data.invoiceId, check: action.data.check }
+        });
+        // yield put({
+        //     type: JJIM_LIKE_PUSH,
+        //     data: result.data.Invoices
+        // })
+
+    } catch (err) {
+        console.error(err);
+        yield put({
+            type: JJIM_LIKE_FAILURE,
+            data: err.response.data,
+        });
+    }
+}
+
+function unLikeInvoiceAPI(data) {
+    return axios.delete(`/invoice/like/${data.invoiceId}`);
+}
+
+function* unLikeInvoice(action) {
+    try {
+
+        const result = yield call(unLikeInvoiceAPI, action.data);
+
+        yield put({
+            type: JJIM_UNLIKE_SUCCESS,
+            data: { userId: result.data.userId, invoiceId: action.data.invoiceId, check: action.data.check }
+        });
+        // yield put({
+        //     type: JJIM_UNLIKE_PUSH,
+        //     data: result.data.FoodId
+        // })
+
+    } catch (err) {
+        console.error(err);
+        yield put({
+            type: JJIM_UNLIKE_FAILURE,
+            data: err.response.data,
+        });
+    }
+}
 
 export function* watchInvoiceRelatedGet() {
 
     yield takeLatest(INVOICE_RELATED_REQUEST, invoiceRelatedGet);
 }
 
+export function* watchInvoiceLikeGet() {
 
+    yield takeLatest(INVOICE_LIKE_GET_REQUEST, invoiceLikeGet);
+}
+
+export function* watchInvoiceChartAdminGet() {
+
+    yield takeLatest(INVOICE_CHART_ADMIN_GET_REQUEST, invoiceAdminChartGet);
+}
 
 
 export function* watchInvoiceGet() {
@@ -307,10 +436,21 @@ export function* watchInvoiceDelete() {
     yield takeLatest(INVOICE_DELETE_REQUEST, invoiceDelete);
 }
 
+function* watchLikeInvoices() {
+    yield takeLatest(JJIM_LIKE_REQUEST, likeInvoice);
+}
+
+function* watchUnLikeInvoices() {
+    yield takeLatest(JJIM_UNLIKE_REQUEST, unLikeInvoice);
+}
+
 
 export default function* invoiceSaga() {
     yield all([
-
+        fork(watchInvoiceLikeGet),
+        fork(watchLikeInvoices),
+        fork(watchUnLikeInvoices),
+        fork(watchInvoiceChartAdminGet),
         fork(watchInvoiceGet),
         fork(watchInvoiceRelatedGet),
         fork(watchInvoiceAdminGet),

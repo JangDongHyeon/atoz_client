@@ -4,9 +4,9 @@ import { Route, Redirect } from 'react-router-dom';
 
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
-    const { me } = useSelector((state) => state.user);
+    const me = useSelector((state) => state.user.me);
 
-    return (<Route {...rest} render={props => (me ? <Component {...props} /> : <Redirect to="/signin" />)} />)
+    return me&&(<Route {...rest} render={props => (me ? <Component {...props} /> : <Redirect to="/signin" />)} />)
 };
 
 

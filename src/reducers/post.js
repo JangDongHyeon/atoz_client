@@ -205,7 +205,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
 
             draft.readPostsLoading = false;
             draft.readPostsDone = true;
-
+       
             draft.imagePaths = action.data.post.PImages;
             draft.post = action.data.post;
             break;

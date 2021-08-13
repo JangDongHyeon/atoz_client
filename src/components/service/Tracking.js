@@ -1,19 +1,22 @@
 
-import React, { useState } from 'react';
+import React, { Component, useState } from 'react';
 import { render } from 'react-dom';
 import { DatePicker, message, Divider } from 'antd';
 import AppLayout from '../AppLayout';
 import { useMediaQuery } from "react-responsive"
 import GoogleMapReact from 'google-map-react';
+// import { GoogleMap, LoadScript ,Polyline} from '@react-google-maps/api';
 import { Reveal, Fade } from 'react-reveal';
 import {
         StaticGoogleMap,
         Marker,
         Path,
 } from 'react-static-google-map';
+import {t} from 'react-switch-lang';
 import warn from '../../assets/warn.png'
 import { CheckOutlined,StarFilled, CheckCircleFilled, WarningFilled, AimOutlined  } from '@ant-design/icons';
 const Tracking = () => {
+     
         const isPc = useMediaQuery({
                 query: "(min-width:1024px)"
         });
@@ -105,6 +108,7 @@ const Tracking = () => {
                 },
 
         ]
+
         const renderItem = (item, index) => {
                 return (
                         <div className='listItemContainer'>
@@ -167,19 +171,110 @@ const Tracking = () => {
                 )
 
         }
+        const Marker = ({ text }) => <div>{text}</div>;
+        const lineSymbol = {
+                path: "M 0,-1 0,1",
+                strokeOpacity: 1,
+                scale: 4,
+              };
+        const markers= [
+                {title:'1',lat: 70.212008, lng: 23.839086},
+                {title:'1', lat: 53.42728, lng: -6.24357},
+                {title:'1',lat: 43.681583, lng: -79.61146},
+                {title:'1',lat: 31.362232, lng:  -112.877804},
+        ]
+        const markers1= [
+                {title:'1',lat: 70.212008, lng: 23.839086},
+                {title:'1', lat: 53.42728, lng: -6.24357},
+        ]
+        const markers2= [
+                {title:'1', lat: 53.42728, lng: -6.24357},
+                {title:'1',lat: 43.681583, lng: -79.61146},
+        ]
+        
+        const apiIsLoaded=(map, maps)=>{
+                // console.log(maps)
+                let geodesicPolyline = new maps.Polyline({
+                        path: markers,
+                        geodesic: true,
+                        // strokeOpacity: 1.0,
+                        strokeOpacity: 0,
+                        strokeWeight: 4,
+                        strokeColor: '#e75319',
+                        icons: [
+                                {
+                                  icon: lineSymbol,
+                                  offset: "0",
+                                  repeat: "20px",
+                                },
+                              ],
+                })
+                let geodesicPolyline2 = new maps.Polyline({
+                        path: markers2,
+                        geodesic: true,
+                        // strokeOpacity: 1.0,
+                        strokeOpacity: 0,
+                        strokeWeight: 4,
+                        strokeColor: '#000',
+                        icons: [
+                                {
+                                  icon: lineSymbol,
+                                  offset: "0",
+                                  repeat: "20px",
+                                },
+                              ],
+                })
+                geodesicPolyline.setMap(map)
+                // geodesicPolyline2.setMap(map)
+
+                var bounds = new maps.LatLngBounds()
+                // let fitbounds = new map.fitbounds()
+                for (let e of markers){
+                        bounds.extend(
+                                new maps.LatLng(e.lat, e.lng)
+                        )
+                }
+                map.fitBounds(bounds)
+
+        }
+
+
 
         const mapView = () => {
+
                 return (
 
                         <div className={isPc ? 'mapContainer' : 'mapContainerM'}>
+                                                {t('home.title')}
+
                                 <GoogleMapReact
                                         bootstrapURLKeys={{ key: "AIzaSyAaWMGexWmY_sJ8_yniNgtfjrsMkDdbh5U" }}
                                         defaultCenter={defaultProps.center}
                                         defaultZoom={defaultProps.zoom}
+                                        options={{minZoom:2, maxZoom:10}}
                                         scale={0}
+                                        yesIWantToUseGoogleMapApiInternals
+                                        onGoogleApiLoaded={({ map, maps }) => apiIsLoaded(map, maps)}
+                                        
                                 >
-
+                                        {markers&&markers.map((item)=>(
+                                                <Marker text={item.title} lat={item.lat} lng={item.lng} />
+                                        ))                                   
+                                        }
+        <Marker text={'YYZ'} lat={43.681583} lng={-79.61146} />
                                 </GoogleMapReact>
+                                {/* <LoadScript
+                                googleMapsApiKey='AIzaSyAaWMGexWmY_sJ8_yniNgtfjrsMkDdbh5U'
+                                                                >
+                                        <GoogleMap
+                                        defaultZoom={8}
+                                        mapContainerStyle={{width:400, height:400}}
+                                        center={{ lat: -3.745,
+                                                lng: -38.523}}
+                                        defaultCenter={{ lat: -34.397, lng: 150.644 }}
+                                        >
+                                        </GoogleMap>
+                                </LoadScript> */}
                                 {/* <StaticGoogleMap size="640x380" apiKey="AIzaSyAaWMGexWmY_sJ8_yniNgtfjrsMkDdbh5U"
                                         center="39.882914836997195, 177.5429478211556"
                                         scale={1}
@@ -199,8 +294,6 @@ const Tracking = () => {
                 )
 
         }
-
-
 
 
         return (
